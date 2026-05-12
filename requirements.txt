@@ -1,0 +1,5 @@
+ollama
+pywhatkit
+secure-smtplib
+pyautogui
+pyperclip
