@@ -1,0 +1,1 @@
+Read recently unread Gmail emails, summarize IT-related issues using AI, and send notification emails automatically.
