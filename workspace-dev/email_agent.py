@@ -10,16 +10,16 @@ import ollama
 # CONFIG
 # =========================
 
-EMAIL_USER = "appukalpesh@gmail.com"
+EMAIL_USER = "" # to which email should the messages come
 
 # Gmail App Password
-EMAIL_PASS = "tpwcxkrbdiwzkhfe"
+EMAIL_PASS = "" # this will be generated
 
 # Receiver Email
 
 
 RECEIVER_EMAILS = [
-    "gasefan818@deapad.com",
+    "gasefan818@deapad.com", # to whom the messages should go 
     "s58dt3shj7@bwmyga.com"
 ]
 
@@ -221,7 +221,7 @@ AI Summary:
             msg_email = MIMEText(alert_message)
 
             msg_email["Subject"] = (
-                "AI Detected IT Issue"
+                "Detected Issue"
             )
 
             msg_email["From"] = EMAIL_USER
