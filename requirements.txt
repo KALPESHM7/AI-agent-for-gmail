@@ -1,5 +1,5 @@
-ollama
-pywhatkit
-secure-smtplib
-pyautogui
-pyperclip
+ollama>=0.3.0
+pywhatkit>=5.4
+secure-smtplib>=0.1.1
+pyautogui>=0.9.54
+pyperclip>=1.9.0
