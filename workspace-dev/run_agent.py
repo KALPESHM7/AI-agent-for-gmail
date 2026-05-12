@@ -12,17 +12,17 @@ import time
 # CONFIG
 # =========================
 
-EMAIL_USER = "appukalpesh@gmail.com"
+EMAIL_USER = "" # to whom the messages should come
 
 # Gmail App Password
-EMAIL_PASS = "tpwcxkrbdiwzkhfe"
+EMAIL_PASS = "" # generated password
 
 # =========================
 # EMAIL RECEIVERS
 # =========================
 
 RECEIVER_EMAILS = [
-    "gasefan818@deapad.com",
+    "gasefan818@deapad.com", # to whom the messages should go
     "s58dt3shj7@bwmyga.com"
 ]
 
@@ -31,9 +31,7 @@ RECEIVER_EMAILS = [
 # =========================
 
 WHATSAPP_NUMBERS = [
-    "+917795764180",
-    "+919114720220",
-    "+919686462090",
+    "+919686462090",# it will be sent to this numbers
     "+919686765247",
     "+919686906360"
 ]
@@ -271,7 +269,7 @@ AI Summary:
             # =========================
 
             whatsapp_message = f"""
-AI Detected IT Issue
+Detected Issue
 
 Subject:
 {subject}
