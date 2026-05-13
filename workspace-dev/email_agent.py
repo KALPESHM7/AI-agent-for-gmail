@@ -5,25 +5,35 @@ from email.header import decode_header
 import smtplib
 from email.mime.text import MIMEText
 import ollama
+import pywhatkit
+import time
 
 # =========================
 # CONFIG
 # =========================
 
-EMAIL_USER = "" # to which email should the messages come
+EMAIL_USER = "" #to which mailid the messages should come
 
 # Gmail App Password
-EMAIL_PASS = "" # this will be generated
+EMAIL_PASS = "" #this is not gmail passsword ,need to generate this 
 
-# Receiver Email
-
+# =========================
+# EMAIL RECEIVERS
+# =========================
 
 RECEIVER_EMAILS = [
-    "gasefan818@deapad.com", # to whom the messages should go 
-    "s58dt3shj7@bwmyga.com"
+    "bs0k58f58e@bwmyga.com",# to whom the messages should be sent
+    "gasefan818@deapad.com"
 ]
 
+# =========================
+# WHATSAPP RECEIVERS
+# =========================
 
+WHATSAPP_NUMBERS = [ 
+     "+919114720220",# to which whatsapp number messages should be sent
+    # "+919686462090",
+]
 
 # =========================
 # CONNECT TO GMAIL
@@ -31,12 +41,18 @@ RECEIVER_EMAILS = [
 
 mail = imaplib.IMAP4_SSL("imap.gmail.com")
 
-mail.login(EMAIL_USER, EMAIL_PASS)
+mail.login(
+    EMAIL_USER,
+    EMAIL_PASS
+)
 
 mail.select("inbox")
 
 # Read latest 5 unread emails only
-status, messages = mail.search(None, 'UNSEEN')
+status, messages = mail.search(
+    None,
+    'UNSEEN'
+)
 
 email_ids = messages[0].split()[-5:]
 
@@ -48,7 +64,10 @@ print(f"\nUnread Emails Found: {len(email_ids)}")
 
 for e_id in email_ids:
 
-    _, msg_data = mail.fetch(e_id, "(RFC822)")
+    _, msg_data = mail.fetch(
+        e_id,
+        "(RFC822)"
+    )
 
     for response_part in msg_data:
 
@@ -64,7 +83,9 @@ for e_id in email_ids:
 
             if isinstance(subject, bytes):
 
-                subject = subject.decode()
+                subject = subject.decode(
+                    errors="ignore"
+                )
 
             sender = msg.get("From")
 
@@ -90,7 +111,8 @@ for e_id in email_ids:
                 "receipt",
                 "subscription",
                 "coursera",
-                "n8n"
+                "n8n",
+                "jewellery"
             ]
 
             sender_lower = sender.lower()
@@ -127,7 +149,8 @@ for e_id in email_ids:
                 "network",
                 "wifi",
                 "login",
-                "password"
+                "password",
+                "unable"
             ]
 
             if not any(
@@ -177,7 +200,7 @@ for e_id in email_ids:
             # =========================
 
             prompt = f"""
-Summarize this IT issue professionally in one sentence.
+Summarize this  issue professionally in one sentence.
 
 Subject:
 {subject}
@@ -198,11 +221,11 @@ Body:
 
             summary = response["message"]["content"]
 
-            print("\nAI SUMMARY:")
+            print("\nSUMMARY:")
             print(summary)
 
             # =========================
-            # SEND SUMMARY EMAIL
+            # SEND EMAIL NOTIFICATION
             # =========================
 
             alert_message = f"""
@@ -218,16 +241,19 @@ AI Summary:
 {summary}
 """
 
-            msg_email = MIMEText(alert_message)
+            msg_email = MIMEText(
+                alert_message
+            )
 
             msg_email["Subject"] = (
-                "Detected Issue"
+                "Detected IT Issue"
             )
 
             msg_email["From"] = EMAIL_USER
 
-            
-            msg_email["To"] = ", ".join(RECEIVER_EMAILS)
+            msg_email["To"] = ", ".join(
+                RECEIVER_EMAILS
+            )
 
             server = smtplib.SMTP_SSL(
                 "smtp.gmail.com",
@@ -239,13 +265,67 @@ AI Summary:
                 EMAIL_PASS
             )
 
-        
-            server.sendmail( EMAIL_USER, RECEIVER_EMAILS, msg_email.as_string() )
+            server.sendmail(
+                EMAIL_USER,
+                RECEIVER_EMAILS,
+                msg_email.as_string()
+            )
 
             server.quit()
 
             print(
-                "\nSummary email sent successfully!"
+                "\nEmail notification sent!"
+            )
+
+            # =========================
+            # SEND WHATSAPP ALERTS
+            # =========================
+
+            whatsapp_message = f"""
+Detected IT Issue
+
+From:
+{sender}
+
+Subject:
+{subject}
+
+Summary:
+{summary}
+"""
+
+            for number in WHATSAPP_NUMBERS:
+
+                try:
+
+                    print(
+                        f"\nSending WhatsApp to {number}"
+                    )
+
+                    pywhatkit.sendwhatmsg_instantly(
+                        phone_no=number,
+                        message=whatsapp_message,
+                        wait_time=15,
+                        tab_close=True,
+                        close_time=5
+                    )
+
+                    print(
+                        f"WhatsApp sent to {number}"
+                    )
+
+                    time.sleep(10)
+
+                except Exception as e:
+
+                    print(
+                        f"WhatsApp failed for {number}"
+                    )
+
+                    print(e)
+
+            print(
+                "\nWhatsApp notifications completed!"
             )
 
 print("\nDone checking emails.")
